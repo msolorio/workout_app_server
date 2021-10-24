@@ -9,9 +9,12 @@
 const resolvers = {
   Query: {
     info: () => 'This is the info',
+
+
     workouts: (parent, args, context) => {
       return context.prisma.workout.findMany();
     },
+
 
     workout: (parent, args, context) => {
       return context.prisma.workout.findUnique({
@@ -46,6 +49,13 @@ const resolvers = {
       });
 
       return newSet;
+    },
+
+
+    deleteWorkout: (parent, args, context) => {
+      return context.prisma.workout.delete({
+        where: { id: Number(args.id) }
+      });
     }
   },
 

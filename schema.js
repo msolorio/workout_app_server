@@ -20,6 +20,8 @@ const typeDefs = gql`
       reps: Int!
       workoutId: ID!
     ): Set!
+
+    deleteWorkout(id: ID!): Workout
   }
 
   type Set {
