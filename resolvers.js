@@ -1,11 +1,3 @@
-// =========================================================
-// TODO:
-// - Add functionality to recieve a single workout
-// - Add functionality to delete a workout
-// - include cascading deletes
-// - delete the sets associated with the workout
-// =========================================================
-
 const resolvers = {
   Query: {
     info: () => 'This is the info',
@@ -18,6 +10,12 @@ const resolvers = {
 
     workout: (parent, args, context) => {
       return context.prisma.workout.findUnique({
+        where: { id: Number(args.id) }
+      });
+    },
+
+    set: (parent, args, context) => {
+      return context.prisma.set.findUnique({
         where: { id: Number(args.id) }
       });
     }
@@ -37,6 +35,13 @@ const resolvers = {
 
       return newWorkout;
     },
+    
+    
+    deleteWorkout: (parent, args, context) => {
+      return context.prisma.workout.delete({
+        where: { id: Number(args.id) }
+      });
+    },
 
 
     addSetToWorkout: (parent, args, context) => {
@@ -51,19 +56,20 @@ const resolvers = {
       return newSet;
     },
 
-
-    deleteWorkout: (parent, args, context) => {
-      return context.prisma.workout.delete({
+    deleteSet: (parent, args, context) => {
+      return context.prisma.set.delete({
         where: { id: Number(args.id) }
       });
     }
   },
+
 
   Workout: {
     sets: (parent, args, context) => {
       return context.prisma.workout.findUnique({ where: { id: parent.id } }).sets();
     }
   },
+
 
   Set: {
     workout: (parent, args, context) => {

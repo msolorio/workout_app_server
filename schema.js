@@ -5,6 +5,7 @@ const typeDefs = gql`
     workouts: [Workout!]!
     workout(id: ID!): Workout
     info: String!
+    set(id: ID!): Set
   }
 
   type Mutation {
@@ -15,13 +16,15 @@ const typeDefs = gql`
       location: String!
     ): Workout!
 
+    deleteWorkout(id: ID!): Workout
+
     addSetToWorkout(
       exercise: String!
       reps: Int!
       workoutId: ID!
     ): Set!
 
-    deleteWorkout(id: ID!): Workout
+    deleteSet(id: ID!): Set
   }
 
   type Set {
