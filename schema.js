@@ -5,45 +5,61 @@ const typeDefs = gql`
     workouts: [Workout!]!
     workout(id: ID!): Workout
     info: String!
-    set(id: ID!): Set
+    exercise(id: ID!): Exercise
   }
 
   type Mutation {
+    seed: String!
+
     createWorkout(
-      date: String!
+      name: String!
       description: String
       length: Int
       location: String!
+      exercises: [InputExercise!]
     ): Workout!
 
     deleteWorkout(id: ID!): Workout
 
-    addSetToWorkout(
-      exercise: String!
+    addExerciseToWorkout(
+      name: String!
       reps: Int!
+      sets: Int!
+      weight: Int
+      unit: String
       workoutId: ID!
-    ): Set!
+    ): Exercise!
 
-    deleteSet(id: ID!): Set
+    deleteExercise(id: ID!): Exercise
   }
 
-  type Set {
+  type Exercise {
     id: ID!
-    exercise: String!
+    name: String!
     reps: Int!
+    sets: Int
+    weight: Int
+    unit: String
     workout: Workout
   }
 
   type Workout {
     id: ID!
-    date: String!
+    name: String!
     description: String
     # "length of the workout in minutes"
     length: Int
-    location: String!
-    sets: [Set!]!
+    location: String
+    exercises: [Exercise!]!
   }
 
+  input InputExercise {
+    name: String!
+    reps: Int!
+    sets: Int
+    weight: Int
+    unit: String
+  }
 `;
 
 module.exports = typeDefs;

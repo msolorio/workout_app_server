@@ -1,3 +1,5 @@
+const seed = require('./seed');
+
 const resolvers = {
   Query: {
     info: () => 'This is the info',
@@ -14,8 +16,8 @@ const resolvers = {
       });
     },
 
-    set: (parent, args, context) => {
-      return context.prisma.set.findUnique({
+    exercise: (parent, args, context) => {
+      return context.prisma.exercise.findUnique({
         where: { id: Number(args.id) }
       });
     }
@@ -23,14 +25,25 @@ const resolvers = {
 
 
   Mutation: {
-    createWorkout: (parent, args, context) => {
-      const newWorkout = context.prisma.workout.create({
+    seed: seed,
+
+    createWorkout: async (parent, args, context) => {
+      const newWorkout = await context.prisma.workout.create({
         data: {
-          date: args.date,
+          name: args.name,
           description: args.description,
           length: args.length,
           location: args.location
         }
+      });
+
+      const formattedExercises = args.exercises.map(ex => {
+        ex.workoutId = Number(newWorkout.id);
+        return ex;
+      })
+
+      await context.prisma.exercise.createMany({
+        data: formattedExercises
       });
 
       return newWorkout;
@@ -44,20 +57,29 @@ const resolvers = {
     },
 
 
-    addSetToWorkout: (parent, args, context) => {
-      const newSet = context.prisma.set.create({
-        data: {
-          exercise: args.exercise,
-          reps: args.reps,
-          workout: { connect: { id: Number(args.workoutId) } }
-        }
-      });
+    addExerciseToWorkout: (parent, args, context) => {
+      try {
+        const newExercise = context.prisma.exercise.create({
+          data: {
+            name: args.name,
+            reps: args.reps,
+            sets: args.sets,
+            weight: args.weight,
+            unit: args.unit,
+            workout: { connect: { id: Number(args.workoutId) } }
+          }
+        });
+  
+        return newExercise;
+      } catch (err) {
+        console.log("error in addExerciseToWorkout:", err);
 
-      return newSet;
+        return { status: 500, errorMessage: 'Something went wrong. Please try again' };
+      }
     },
 
-    deleteSet: (parent, args, context) => {
-      return context.prisma.set.delete({
+    deleteExercise: (parent, args, context) => {
+      return context.prisma.exercise.delete({
         where: { id: Number(args.id) }
       });
     }
@@ -65,15 +87,15 @@ const resolvers = {
 
 
   Workout: {
-    sets: (parent, args, context) => {
-      return context.prisma.workout.findUnique({ where: { id: parent.id } }).sets();
+    exercises: (parent, args, context) => {
+      return context.prisma.workout.findUnique({ where: { id: parent.id } }).exercises();
     }
   },
 
 
-  Set: {
+  Exercise: {
     workout: (parent, args, context) => {
-      return context.prisma.set.findUnique({ where: { id: parent.id } }).workout();
+      return context.prisma.exercise.findUnique({ where: { id: parent.id } }).workout();
     }
   }
 }

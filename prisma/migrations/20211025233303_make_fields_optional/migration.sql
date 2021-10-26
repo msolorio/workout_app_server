@@ -1,0 +1,9 @@
+-- AlterTable
+ALTER TABLE "Exercise" ALTER COLUMN "sets" DROP NOT NULL,
+ALTER COLUMN "weight" DROP NOT NULL,
+ALTER COLUMN "unit" DROP NOT NULL;
+
+-- AlterTable
+ALTER TABLE "Workout" ALTER COLUMN "description" DROP NOT NULL,
+ALTER COLUMN "length" DROP NOT NULL,
+ALTER COLUMN "location" DROP NOT NULL;
