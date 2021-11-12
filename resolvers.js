@@ -37,10 +37,10 @@ const resolvers = {
         }
       });
 
-      const formattedExercises = args.exercises.map(ex => {
+      const formattedExercises = args.exercises?.map(ex => {
         ex.workoutId = Number(newWorkout.id);
         return ex;
-      })
+      }) || [];
 
       await context.prisma.exercise.createMany({
         data: formattedExercises
@@ -66,6 +66,7 @@ const resolvers = {
             sets: args.sets,
             weight: args.weight,
             unit: args.unit,
+            // TODO: can update to workoutId: Number(args.workoutId)
             workout: { connect: { id: Number(args.workoutId) } }
           }
         });
