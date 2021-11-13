@@ -20,7 +20,7 @@ const resolvers = {
       return context.prisma.exercise.findUnique({
         where: { id: Number(args.id) }
       });
-    }
+    },
   },
 
 
@@ -83,6 +83,46 @@ const resolvers = {
       return context.prisma.exercise.delete({
         where: { id: Number(args.id) }
       });
+    },
+
+    createSession: async (parent, args, context) => {
+      console.log('args', args);
+
+      const newSession = await context.prisma.session.create({
+        data: {
+          workoutId: Number(args.workoutId),
+          completed: false
+        }
+      })
+
+      // 1. Get Exercises included in associated workout
+      const exercises = await context.prisma.exercise.findMany({
+        where: { workoutId: Number(args.workoutId) }
+      })
+
+      console.log('exercises', exercises)
+
+      // 2. for each Exercise - cretae ExerciseInstance and associate it
+      // with the Session
+      // exercises.forEach((ex) => {
+      //   console.log('ex', ex)
+      // })
+
+      const exerciseInstances = exercises.map((ex) => {
+        return {
+          exerciseId: ex.id,
+          sessionId: newSession.id,
+          // TODO: Add setsCompleted
+        }
+      })
+
+      console.log('exerciseInstances', exerciseInstances)
+
+      await context.prisma.exerciseInstance.createMany({
+        data: exerciseInstances
+      })
+
+      return newSession
     }
   },
 
@@ -97,6 +137,26 @@ const resolvers = {
   Exercise: {
     workout: (parent, args, context) => {
       return context.prisma.exercise.findUnique({ where: { id: parent.id } }).workout();
+    }
+  },
+
+  Session: {
+    workout: (parent, args, context) => {
+      return context.prisma.session.findUnique({ where: { id: parent.id } }).workout()
+    },
+
+    exerciseInstance: (parent, args, context) => {
+      return context.prisma.session.findUnique({ where: { id: parent.id } }).exerciseInstances()
+    }
+  },
+
+  ExerciseInstance: {
+    exercise: (parent, args, context) => {
+      return context.prisma.exerciseInstance.findUnique({ where: { id: parent.id }}).exercise()
+    },
+
+    session: (parent, args, context) => {
+      return context.prisma.exerciseInstance.findUnique({ where: { id: parent.id } }).session()
     }
   }
 }

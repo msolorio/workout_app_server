@@ -31,6 +31,10 @@ const typeDefs = gql`
     ): Exercise!
 
     deleteExercise(id: ID!): Exercise
+
+    createSession(
+      workoutId: ID!
+    ): Session!
   }
 
   type Exercise {
@@ -51,6 +55,21 @@ const typeDefs = gql`
     length: Int
     location: String
     exercises: [Exercise!]!
+  }
+
+  type Session {
+    id: ID!
+    workout: Workout!
+    completed: Boolean!
+    # date: String!
+    exerciseInstance: [ExerciseInstance]!
+  }
+
+  type ExerciseInstance {
+    id: ID!
+    exercise: Exercise!
+    session: Session!
+    # setsCompleted: Int!
   }
 
   input InputExercise {
