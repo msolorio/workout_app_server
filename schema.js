@@ -62,14 +62,15 @@ const typeDefs = gql`
     workout: Workout!
     completed: Boolean!
     # date: String!
-    exerciseInstance: [ExerciseInstance]!
+    exerciseInstances: [ExerciseInstance]!
   }
 
   type ExerciseInstance {
     id: ID!
     exercise: Exercise!
     session: Session!
-    # setsCompleted: Int!
+    setsCompleted: Int!
+    repsCompleted: Int!
   }
 
   input InputExercise {

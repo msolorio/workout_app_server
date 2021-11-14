@@ -54,5 +54,6 @@ model ExerciseInstance {
   exerciseId          Int?
   session             Session?      @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   sessionId           Int?
-  // TODO: Add setsCompleted
+  setsCompleted       Int           @default(0)
+  repsCompleted       Int           @default(0)
 }

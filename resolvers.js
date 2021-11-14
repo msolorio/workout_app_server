@@ -66,8 +66,7 @@ const resolvers = {
             sets: args.sets,
             weight: args.weight,
             unit: args.unit,
-            // TODO: can update to workoutId: Number(args.workoutId)
-            workout: { connect: { id: Number(args.workoutId) } }
+            workoutId: Number(args.workoutId)
           }
         });
   
@@ -86,8 +85,6 @@ const resolvers = {
     },
 
     createSession: async (parent, args, context) => {
-      console.log('args', args);
-
       const newSession = await context.prisma.session.create({
         data: {
           workoutId: Number(args.workoutId),
@@ -95,28 +92,20 @@ const resolvers = {
         }
       })
 
-      // 1. Get Exercises included in associated workout
+      // Get Exercises included in associated workout
       const exercises = await context.prisma.exercise.findMany({
         where: { workoutId: Number(args.workoutId) }
       })
 
-      console.log('exercises', exercises)
-
-      // 2. for each Exercise - cretae ExerciseInstance and associate it
-      // with the Session
-      // exercises.forEach((ex) => {
-      //   console.log('ex', ex)
-      // })
-
+      // Cretae ExerciseInstance for each exercise
       const exerciseInstances = exercises.map((ex) => {
         return {
           exerciseId: ex.id,
           sessionId: newSession.id,
-          // TODO: Add setsCompleted
+          setsCompleted: 0,
+          repsCompleted: 0
         }
       })
-
-      console.log('exerciseInstances', exerciseInstances)
 
       await context.prisma.exerciseInstance.createMany({
         data: exerciseInstances
@@ -145,7 +134,7 @@ const resolvers = {
       return context.prisma.session.findUnique({ where: { id: parent.id } }).workout()
     },
 
-    exerciseInstance: (parent, args, context) => {
+    exerciseInstances: (parent, args, context) => {
       return context.prisma.session.findUnique({ where: { id: parent.id } }).exerciseInstances()
     }
   },
