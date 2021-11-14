@@ -120,6 +120,27 @@ const resolvers = {
       })
 
       return newSession
+    },
+
+    closeSession: (parent, args, context) => {
+      return context.prisma.session.update({
+        where: { id: Number(args.id) },
+        data: { completed: true }
+      })
+    },
+
+    updateSetForExInstance: (parent, args, context) => {
+      return context.prisma.exerciseInstance.update({
+        where: { id: Number(args.id) },
+        data: { setsCompleted: args.setsCompleted }
+      })
+    },
+
+    updateRepsForExInstance: (parent, args, context) => {
+      return context.prisma.exerciseInstance.update({
+        where: { id: Number(args.id) },
+        data: { repsCompleted: args.repsCompleted }
+      })
     }
   },
 

@@ -36,6 +36,18 @@ const typeDefs = gql`
     createSession(
       workoutId: ID!
     ): Session!
+
+    closeSession(id: ID!): Session 
+
+    updateSetForExInstance(
+      id: ID!
+      setsCompleted: Int!
+    ): ExerciseInstance!
+
+    updateRepsForExInstance(
+      id: ID!
+      repsCompleted: Int!
+    ): ExerciseInstance!
   }
 
   type Exercise {
