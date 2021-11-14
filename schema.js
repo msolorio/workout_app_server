@@ -6,6 +6,7 @@ const typeDefs = gql`
     workout(id: ID!): Workout
     info: String!
     exercise(id: ID!): Exercise
+    session(id: ID!): Session
   }
 
   type Mutation {
@@ -45,6 +46,7 @@ const typeDefs = gql`
     weight: Int
     unit: String
     workout: Workout
+    exerciseInstances: [ExerciseInstance!]!
   }
 
   type Workout {
@@ -55,6 +57,7 @@ const typeDefs = gql`
     length: Int
     location: String
     exercises: [Exercise!]!
+    sessions: [Session!]!
   }
 
   type Session {
@@ -62,7 +65,7 @@ const typeDefs = gql`
     workout: Workout!
     completed: Boolean!
     # date: String!
-    exerciseInstances: [ExerciseInstance]!
+    exerciseInstances: [ExerciseInstance!]!
   }
 
   type ExerciseInstance {

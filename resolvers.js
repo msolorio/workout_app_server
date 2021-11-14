@@ -16,11 +16,19 @@ const resolvers = {
       });
     },
 
+
     exercise: (parent, args, context) => {
       return context.prisma.exercise.findUnique({
         where: { id: Number(args.id) }
       });
     },
+
+
+    session: (parent, args, context) => {
+      return context.prisma.session.findUnique({
+        where: { id: Number(args.id) }
+      })
+    }
   },
 
 
@@ -119,6 +127,10 @@ const resolvers = {
   Workout: {
     exercises: (parent, args, context) => {
       return context.prisma.workout.findUnique({ where: { id: parent.id } }).exercises();
+    },
+
+    sessions: (parent, args, context) => {
+      return context.prisma.workout.findUnique({ where: { id: parent.id }}).sessions()
     }
   },
 
@@ -126,8 +138,13 @@ const resolvers = {
   Exercise: {
     workout: (parent, args, context) => {
       return context.prisma.exercise.findUnique({ where: { id: parent.id } }).workout();
+    },
+    
+    exerciseInstances: (parent, args, context) => {
+      return context.prisma.exercise.findUnique({ where: { id: parent.id } }).exerciseInstances();
     }
   },
+
 
   Session: {
     workout: (parent, args, context) => {
@@ -138,6 +155,7 @@ const resolvers = {
       return context.prisma.session.findUnique({ where: { id: parent.id } }).exerciseInstances()
     }
   },
+
 
   ExerciseInstance: {
     exercise: (parent, args, context) => {
