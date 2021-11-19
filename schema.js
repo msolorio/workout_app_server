@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server');
+const { gql } = require('apollo-server')
 
 const typeDefs = gql`
   type Query {
@@ -76,7 +76,7 @@ const typeDefs = gql`
     id: ID!
     workout: Workout!
     completed: Boolean!
-    # date: String!
+    date: Float!
     exerciseInstances: [ExerciseInstance!]!
   }
 

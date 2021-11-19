@@ -174,6 +174,10 @@ const resolvers = {
 
     exerciseInstances: (parent, args, context) => {
       return context.prisma.session.findUnique({ where: { id: parent.id } }).exerciseInstances()
+    },
+
+    date: (parent, args, context) => {
+      return parent.createdAt
     }
   },
 
