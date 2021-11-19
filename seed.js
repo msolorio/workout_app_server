@@ -14,7 +14,7 @@ async function seed(parent, args, context) {
         description: 'Great beginner spot - easy to catch waves',
         location: 'Tourmaline Surf Park'
       }
-    });
+    })
 
     const secondWorkout = await context.prisma.workout.create({
       data: {
@@ -23,7 +23,16 @@ async function seed(parent, args, context) {
         length: 120,
         location: 'Famosa Slough'
       }
-    });
+    })
+
+    const thirdWorkout = await context.prisma.workout.create({
+      data: {
+        name: 'Gym Workout',
+        description: 'pumping iron at the place down the street',
+        length: 120,
+        location: 'Point Loma Gym'
+      }
+    })
 
     // Create exercises
     const exercisesData = [
@@ -59,7 +68,31 @@ async function seed(parent, args, context) {
         reps: 10,
         sets: 3,
         workoutId: Number(secondWorkout.id)
-      }
+      },
+      {
+        name: 'Bicep Curl',
+        reps: 10,
+        sets: 3,
+        weight: 15,
+        unit: 'lbs',
+        workoutId: Number(thirdWorkout.id)
+      },
+      {
+        name: 'Chest Press',
+        reps: 8,
+        sets: 3,
+        weight: 40,
+        unit: 'lbs',
+        workoutId: Number(thirdWorkout.id)
+      },
+      {
+        name: 'Shoulder Press',
+        reps: 8,
+        sets: 3,
+        weight: 30,
+        unit: 'lbs',
+        workoutId: Number(thirdWorkout.id)
+      },
     ]
 
     let exercisesResult = []
@@ -76,14 +109,17 @@ async function seed(parent, args, context) {
     // Create a session
     const createdSession = await context.prisma.session.create({
       data: {
-        workoutId: Number(secondWorkout.id),
+        workoutId: Number(thirdWorkout.id),
         completed: false
       }
     })
 
+    console.log('createdSession', createdSession)
+    
+
     // Create exercise instances
     const exInstancesData = exercisesResult
-      .filter((ex) => ex.workoutId === secondWorkout.id)
+      .filter((ex) => ex.workoutId === createdSession.workoutId)
       .map((ex) => {
         return {
           exerciseId: ex.id,
