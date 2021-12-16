@@ -72,19 +72,29 @@ const resolvers = {
         }
       })
 
-      const exercises = args.exercises
+      const exercises = args.exercises || []
 
       for (let i = 0; i < exercises.length; i++) {
         const exercise = exercises[i]
 
-        await context.prisma.exercise.update({
-          where: { id: Number(exercise.id) },
-          data: {
+        // upsert - updates exercise if one with id found
+        // otherwise create exercise
+        await context.prisma.exercise.upsert({
+          where: { id: Number(exercise.id) || -1 },
+          update: {
             name: exercise.name,
             reps: exercise.reps,
             sets: exercise.sets,
             weight: exercise.weight,
             unit: exercise.unit
+          },
+          create: {
+            name: exercise.name,
+            reps: exercise.reps,
+            sets: exercise.sets,
+            weight: exercise.weight,
+            unit: exercise.unit,
+            workoutId: Number(updatedWorkout.id)
           }
         })
       }

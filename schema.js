@@ -99,7 +99,7 @@ const typeDefs = gql`
   }
 
   input InputUpdateExercise {
-    id: ID!
+    id: ID
     name: String
     reps: Int
     sets: Int
