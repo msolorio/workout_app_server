@@ -7,6 +7,7 @@ const typeDefs = gql`
     info: String!
     exercise(id: ID!): Exercise
     session(id: ID!): Session
+    sessions: [Session!]!
   }
 
   type Mutation {
@@ -18,6 +19,15 @@ const typeDefs = gql`
       length: Int
       location: String!
       exercises: [InputExercise!]
+    ): Workout!
+
+    updateWorkout(
+      id: ID!
+      name: String
+      description: String
+      length: Int
+      location: String
+      exercises: [InputUpdateExercise!]
     ): Workout!
 
     deleteWorkout(id: ID!): Workout
@@ -88,7 +98,17 @@ const typeDefs = gql`
     repsCompleted: Int!
   }
 
+  input InputUpdateExercise {
+    id: ID!
+    name: String
+    reps: Int
+    sets: Int
+    weight: Int
+    unit: String
+  }
+
   input InputExercise {
+    id: ID
     name: String!
     reps: Int!
     sets: Int

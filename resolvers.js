@@ -28,6 +28,10 @@ const resolvers = {
       return context.prisma.session.findUnique({
         where: { id: Number(args.id) }
       })
+    },
+
+    sessions: (parent, args, context) => {
+      return context.prisma.session.findMany()
     }
   },
 
@@ -55,6 +59,37 @@ const resolvers = {
       });
 
       return newWorkout;
+    },
+
+    updateWorkout: async (parent, args, context) => {
+      const updatedWorkout = await context.prisma.workout.update({
+        where: { id: Number(args.id) },
+        data: {
+          name: args.name,
+          description: args.description,
+          length: args.length,
+          location: args.location
+        }
+      })
+
+      const exercises = args.exercises
+
+      for (let i = 0; i < exercises.length; i++) {
+        const exercise = exercises[i]
+
+        await context.prisma.exercise.update({
+          where: { id: Number(exercise.id) },
+          data: {
+            name: exercise.name,
+            reps: exercise.reps,
+            sets: exercise.sets,
+            weight: exercise.weight,
+            unit: exercise.unit
+          }
+        })
+      }
+
+      return updatedWorkout
     },
     
     
