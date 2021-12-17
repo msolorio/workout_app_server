@@ -135,7 +135,10 @@ async function seed(parent, args, context) {
       })
     }
 
-    return "Successfully seeded DB";
+    return {
+      workouts: [firstWorkout, secondWorkout, thirdWorkout],
+      sessions: [createdSession]
+    }
   } catch (err) {
     console.log('Error seeding DB ==>', err);
   }

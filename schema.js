@@ -11,7 +11,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    seed: String!
+    seed: SeededData
 
     createWorkout(
       name: String!
@@ -58,6 +58,11 @@ const typeDefs = gql`
       id: ID!
       repsCompleted: Int!
     ): ExerciseInstance!
+  }
+
+  type SeededData {
+    workouts: [Workout!]!
+    sessions: [Session!]!
   }
 
   type Exercise {
