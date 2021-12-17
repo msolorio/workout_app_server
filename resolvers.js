@@ -74,6 +74,7 @@ const resolvers = {
 
       const exercises = args.exercises || []
 
+      
       for (let i = 0; i < exercises.length; i++) {
         const exercise = exercises[i]
 
@@ -97,6 +98,24 @@ const resolvers = {
             workoutId: Number(updatedWorkout.id)
           }
         })
+      }
+
+      const exsFromDb = await context.prisma.exercise.findMany({
+        where: { workoutId: Number(updatedWorkout.id) }
+      })
+
+      // If an exercise in db is not found in exercise data from client
+      // delete exercise
+      for (let i = 0; i < exsFromDb.length; i++) {
+        const exFromDbId = exsFromDb[i].id
+
+        const exFound = exercises.map(ex => Number(ex.id)).includes(exFromDbId)
+
+        if (!exFound) {
+          await context.prisma.exercise.delete({
+            where: { id: Number(exFromDbId) }
+          })
+        }
       }
 
       return updatedWorkout
