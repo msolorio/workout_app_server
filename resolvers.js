@@ -1,3 +1,6 @@
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+
 const seed = require('./seed');
 
 const resolvers = {
@@ -39,13 +42,41 @@ const resolvers = {
   Mutation: {
     seed: seed,
 
+
+    signup: async (parent, args, context) => {
+      const hashedPassword = await bcrypt.hash(args.password, 10)
+
+      const user = await context.prisma.user.create({
+        data: { ...args, password: hashedPassword }
+      })
+
+      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET)
+
+      return { token, user }
+    },
+
+
+    login: async (parent, args, context) => {
+      const user = await context.prisma.user.findUnique({ where: { username: args.username } })
+      if (!user) return { error: 'Invalid credentials' }
+
+      const passwordIsValid = await bcrypt.compare(args.password, user.password)
+      if (!passwordIsValid) return { error: 'Invalid credentials' }
+
+      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET)
+
+      return { token, user }
+    },
+
+
     createWorkout: async (parent, args, context) => {
       const newWorkout = await context.prisma.workout.create({
         data: {
           name: args.name,
           description: args.description,
           length: args.length,
-          location: args.location
+          location: args.location,
+          userId: Number(args.userId)
         }
       });
 
@@ -60,6 +91,7 @@ const resolvers = {
 
       return newWorkout;
     },
+
 
     updateWorkout: async (parent, args, context) => {
       const updatedWorkout = await context.prisma.workout.update({
@@ -150,11 +182,13 @@ const resolvers = {
       }
     },
 
+
     deleteExercise: (parent, args, context) => {
       return context.prisma.exercise.delete({
         where: { id: Number(args.id) }
       });
     },
+
 
     createSession: async (parent, args, context) => {
       const newSession = await context.prisma.session.create({
@@ -186,6 +220,7 @@ const resolvers = {
       return newSession
     },
 
+
     completeSession: (parent, args, context) => {
       return context.prisma.session.update({
         where: { id: Number(args.id) },
@@ -193,12 +228,14 @@ const resolvers = {
       })
     },
 
+
     updateSetForExInstance: (parent, args, context) => {
       return context.prisma.exerciseInstance.update({
         where: { id: Number(args.id) },
         data: { setsCompleted: args.setsCompleted }
       })
     },
+
 
     updateRepsForExInstance: (parent, args, context) => {
       return context.prisma.exerciseInstance.update({
@@ -216,6 +253,10 @@ const resolvers = {
 
     sessions: (parent, args, context) => {
       return context.prisma.workout.findUnique({ where: { id: parent.id }}).sessions()
+    },
+
+    user: (parent, args, context) => {
+      return context.prisma.workout.findUnique({ where: { id: parent.id } }).user()
     }
   },
 

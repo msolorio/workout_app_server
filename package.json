@@ -13,8 +13,11 @@
   "dependencies": {
     "@prisma/client": "^3.3.0",
     "apollo-server": "^3.4.0",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.0",
     "graphql": "^15.6.1",
-    "graphql-date": "^1.0.3"
+    "graphql-date": "^1.0.3",
+    "jsonwebtoken": "^8.5.1"
   },
   "devDependencies": {
     "prisma": "^3.3.0"

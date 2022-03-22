@@ -1,3 +1,4 @@
+require('dotenv').config()
 const { ApolloServer } = require('apollo-server');
 const { PrismaClient } = require('@prisma/client');
 const typeDefs = require('./schema');

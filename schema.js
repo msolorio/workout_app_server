@@ -13,12 +13,17 @@ const typeDefs = gql`
   type Mutation {
     seed: SeededData
 
+    signup(username: String!, password: String!): AuthPayload
+
+    login(username: String!, password: String!): AuthPayload
+
     createWorkout(
       name: String!
       description: String
       length: Int
       location: String!
       exercises: [InputExercise!]
+      userId: ID!
     ): Workout!
 
     updateWorkout(
@@ -72,6 +77,12 @@ const typeDefs = gql`
     password: String!
   }
 
+  type AuthPayload {
+    token: String
+    user: User
+    error: String
+  }
+
   type Exercise {
     id: ID!
     name: String!
@@ -92,11 +103,13 @@ const typeDefs = gql`
     location: String
     exercises: [Exercise!]!
     sessions: [Session!]!
+    user: User!
   }
 
   type Session {
     id: ID!
     workout: Workout!
+    user: User!
     completed: Boolean!
     date: Float!
     exerciseInstances: [ExerciseInstance!]!
