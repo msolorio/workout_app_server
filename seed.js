@@ -2,26 +2,37 @@ async function seed(parent, args, context) {
   try {
 
     // Clear existing records
+    await context.prisma.user.deleteMany()
     await context.prisma.workout.deleteMany()
     await context.prisma.exercise.deleteMany()
     await context.prisma.session.deleteMany()
     await context.prisma.exerciseInstance.deleteMany()
     
+    // Create users
+    const firstUser = await context.prisma.user.create({
+      data: {
+        username: 'testuser',
+        password: '1234'
+      }
+    })
+
     // Create workouts
     const firstWorkout = await context.prisma.workout.create({
       data: {
         name: 'Tourmaline Surf Sesh',
         description: 'Great beginner spot - easy to catch waves',
-        location: 'Tourmaline Surf Park'
+        location: 'Tourmaline Surf Park',
+        userId: Number(firstUser.id)
       }
     })
-
+    
     const secondWorkout = await context.prisma.workout.create({
       data: {
         name: 'Marsh Workout',
         description: 'Marsh by my house',
         length: 120,
-        location: 'Famosa Slough'
+        location: 'Famosa Slough',
+        userId: Number(firstUser.id)
       }
     })
 
@@ -30,7 +41,8 @@ async function seed(parent, args, context) {
         name: 'Gym Workout',
         description: 'pumping iron at the place down the street',
         length: 120,
-        location: 'Point Loma Gym'
+        location: 'Point Loma Gym',
+        userId: Number(firstUser.id)
       }
     })
 
@@ -110,12 +122,10 @@ async function seed(parent, args, context) {
     const createdSession = await context.prisma.session.create({
       data: {
         workoutId: Number(thirdWorkout.id),
-        completed: false
+        completed: false,
+        userId: Number(firstUser.id)
       }
     })
-
-    console.log('createdSession', createdSession)
-    
 
     // Create exercise instances
     const exInstancesData = exercisesResult
@@ -137,7 +147,8 @@ async function seed(parent, args, context) {
 
     return {
       workouts: [firstWorkout, secondWorkout, thirdWorkout],
-      sessions: [createdSession]
+      sessions: [createdSession],
+      users: [firstUser]
     }
   } catch (err) {
     console.log('Error seeding DB ==>', err);

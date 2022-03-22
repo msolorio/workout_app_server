@@ -10,50 +10,62 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id                    Int               @id @default(autoincrement())
+  username              String
+  password              String
+  workouts              Workout[]
+  sessions              Session[]
+}
+
 model Workout {
-  id                  Int           @id @default(autoincrement())
-  createdAt           DateTime      @default(now())
-  updatedAt           DateTime      @updatedAt
-  name                String
-  description         String?
-  length              Int?
-  location            String?
-  exercises           Exercise[]
-  sessions            Session[]
+  id                    Int               @id @default(autoincrement())
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  name                  String
+  description           String?
+  length                Int?
+  location              String?
+  user                  User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                Int
+  exercises             Exercise[]
+  sessions              Session[]
 }
 
 model Exercise {
-  id                  Int           @id @default(autoincrement())
-  createdAt           DateTime      @default(now())
-  updatedAt           DateTime      @updatedAt
-  name                String
-  reps                Int
-  sets                Int?
-  weight              Int?
-  unit                String?
-  workout             Workout?      @relation(fields: [workoutId], references: [id], onDelete: Cascade)
-  workoutId           Int?
-  exerciseInstances   ExerciseInstance[]
+  id                    Int               @id @default(autoincrement())
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  name                  String
+  reps                  Int
+  sets                  Int?
+  weight                Int?
+  unit                  String?
+  workout               Workout?          @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  workoutId             Int?
+  exerciseInstances     ExerciseInstance[]
 }
 
 model Session {
-  id                  Int           @id @default(autoincrement())
-  createdAt           DateTime      @default(now())
-  updatedAt           DateTime      @updatedAt
-  workout             Workout?      @relation(fields: [workoutId], references: [id], onDelete: Cascade)
-  workoutId           Int?
-  completed           Boolean
-  exerciseInstances   ExerciseInstance[]
+  id                    Int               @id @default(autoincrement())
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  workout               Workout?          @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  workoutId             Int?
+  completed             Boolean
+  user                  User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                Int
+  exerciseInstances     ExerciseInstance[]
 }
 
 model ExerciseInstance {
-  id                  Int           @id @default(autoincrement())
-  createdAt           DateTime      @default(now())
-  updatedAt           DateTime      @updatedAt
-  exercise            Exercise?     @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
-  exerciseId          Int?
-  session             Session?      @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  sessionId           Int?
-  setsCompleted       Int           @default(0)
-  repsCompleted       Int           @default(0)
+  id                    Int               @id @default(autoincrement())
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  exercise              Exercise?         @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  exerciseId            Int?
+  session               Session?          @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId             Int?
+  setsCompleted         Int               @default(0)
+  repsCompleted         Int               @default(0)
 }

@@ -63,6 +63,13 @@ const typeDefs = gql`
   type SeededData {
     workouts: [Workout!]!
     sessions: [Session!]!
+    users: [User!]!
+  }
+
+  type User {
+    id: ID!
+    username: String!
+    password: String!
   }
 
   type Exercise {
