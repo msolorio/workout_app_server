@@ -47,7 +47,7 @@ const typeDefs = gql`
       workoutId: ID!
     ): Session!
 
-    closeSession(id: ID!): Session 
+    completeSession(id: ID!): Session 
 
     updateSetForExInstance(
       id: ID!

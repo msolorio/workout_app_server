@@ -186,7 +186,7 @@ const resolvers = {
       return newSession
     },
 
-    closeSession: (parent, args, context) => {
+    completeSession: (parent, args, context) => {
       return context.prisma.session.update({
         where: { id: Number(args.id) },
         data: { completed: true }
