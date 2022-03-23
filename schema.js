@@ -17,6 +17,7 @@ const typeDefs = gql`
     login(username: String!, password: String!): AuthPayload
 
     createWorkout(
+      token: String!
       name: String!
       description: String
       length: Int
@@ -26,6 +27,7 @@ const typeDefs = gql`
     ): Workout!
 
     updateWorkout(
+      token: String!
       id: ID!
       name: String
       description: String
@@ -34,33 +36,40 @@ const typeDefs = gql`
       exercises: [InputUpdateExercise!]
     ): Workout!
 
-    deleteWorkout(id: ID!): Workout
+    deleteWorkout(
+      token: String!
+      id: ID!
+    ): CountResponse
 
     addExerciseToWorkout(
+      token: String!
       name: String!
-      reps: Int!
+      reps: Int
       sets: Int!
       weight: Int
       unit: String
       workoutId: ID!
     ): Exercise!
 
-    deleteExercise(id: ID!): Exercise
+    deleteExercise(
+      token: String!
+      id: ID!
+    ): CountResponse
 
     createSession(
+      token: String!
       workoutId: ID!
     ): Session!
 
-    completeSession(id: ID!): Session 
+    completeSession(
+      token: String!
+      id: ID!
+    ): CountResponse
 
     updateSetForExInstance(
+      token: String!
       id: ID!
       setsCompleted: Int!
-    ): ExerciseInstance!
-
-    updateRepsForExInstance(
-      id: ID!
-      repsCompleted: Int!
     ): ExerciseInstance!
   }
 
@@ -73,13 +82,16 @@ const typeDefs = gql`
   type User {
     id: ID!
     username: String!
-    password: String!
   }
 
   type AuthPayload {
     token: String
     user: User
     error: String
+  }
+
+  type CountResponse {
+    count: Int!
   }
 
   type Exercise {
