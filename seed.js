@@ -1,3 +1,5 @@
+const bcrypt = require('bcryptjs')
+
 async function seed(parent, args, context) {
   try {
 
@@ -9,10 +11,12 @@ async function seed(parent, args, context) {
     await context.prisma.exerciseInstance.deleteMany()
     
     // Create users
+    const hashedPassword = await bcrypt.hash('1234', 10)
+
     const firstUser = await context.prisma.user.create({
       data: {
         username: 'testuser',
-        password: '1234'
+        password: hashedPassword
       }
     })
 

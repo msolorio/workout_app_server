@@ -1,40 +1,61 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const verifyAuth = require('./utils/verifyAuth')
+const makeAuthedQuery = require('./utils/makeAuthedQuery')
 
 const seed = require('./seed');
+
+// const { ApolloError } = require('apollo-server-errors')
+const {
+  AuthenticationError,
+  ApolloError
+} = require('apollo-server')
+
+
 
 const resolvers = {
   Query: {
     info: () => 'This is the info',
 
-
-    workouts: (parent, args, context) => {
-      return context.prisma.workout.findMany();
+    workouts: async (parent, args, context) => {
+      return makeAuthedQuery(context.userId, () => {
+        return context.prisma.workout.findMany({
+          where: { userId: context.userId }
+        })
+      })
     },
 
-
+    
     workout: (parent, args, context) => {
-      return context.prisma.workout.findUnique({
-        where: { id: Number(args.id) }
-      });
-    },
-
-
-    exercise: (parent, args, context) => {
-      return context.prisma.exercise.findUnique({
-        where: { id: Number(args.id) }
-      });
+      return makeAuthedQuery(context.userId, () => {
+        return context.prisma.workout.findFirst({
+          where: {
+            userId: context.userId,
+            id: Number(args.id)
+          }
+        })
+      })
     },
 
 
     session: (parent, args, context) => {
-      return context.prisma.session.findUnique({
-        where: { id: Number(args.id) }
+      return makeAuthedQuery(context.userId, () => {
+        return context.prisma.session.findFirst({
+          where: {
+            userId: context.userId,
+            id: Number(args.id)
+          }
+        })
       })
+
     },
 
     sessions: (parent, args, context) => {
-      return context.prisma.session.findMany()
+      return makeAuthedQuery(context.userId, () => {
+        return context.prisma.session.findMany({
+          where: { userId: context.userId }
+        })
+      })
     }
   },
 
@@ -44,6 +65,9 @@ const resolvers = {
 
 
     signup: async (parent, args, context) => {
+      console.log('called signup resolver')
+      
+
       const hashedPassword = await bcrypt.hash(args.password, 10)
 
       const user = await context.prisma.user.create({
@@ -279,6 +303,10 @@ const resolvers = {
 
     exerciseInstances: (parent, args, context) => {
       return context.prisma.session.findUnique({ where: { id: parent.id } }).exerciseInstances()
+    },
+
+    user: (parent, args, context) => {
+      return context.prisma.session.findUnique({ where: { id: parent.id } }).user()
     },
 
     date: (parent, args, context) => {

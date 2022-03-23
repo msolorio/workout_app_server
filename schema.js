@@ -2,12 +2,11 @@ const { gql } = require('apollo-server')
 
 const typeDefs = gql`
   type Query {
-    workouts: [Workout!]!
-    workout(id: ID!): Workout
+    workouts(token: String!): [Workout!]!
+    workout(token: String!, id: ID!): Workout
+    session(token: String!, id: ID!): Session
+    sessions(token: String!): [Session!]!
     info: String!
-    exercise(id: ID!): Exercise
-    session(id: ID!): Session
-    sessions: [Session!]!
   }
 
   type Mutation {
