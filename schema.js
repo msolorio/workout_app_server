@@ -23,7 +23,6 @@ const typeDefs = gql`
       length: Int
       location: String!
       exercises: [InputExercise!]
-      userId: ID!
     ): Workout!
 
     updateWorkout(

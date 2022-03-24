@@ -118,9 +118,17 @@ const resolvers = {
     
     updateWorkout: async (parent, args, context) => {
       return makeAuthedQuery(context.userId, async () => {
+        const originalWorkout = await context.prisma.workout.findFirst({
+          where: {
+            id: Number(args.id),
+            userId: context.userId
+          }
+        })
+
+        if (!originalWorkout) throw new AuthenticationError('You are not authenticated. Please log in.')
+
         const updatedWorkout = await context.prisma.workout.update({
           where: {
-            userId: context.userId,
             id: Number(args.id)
           },
           data: {
