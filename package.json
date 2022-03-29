@@ -9,6 +9,7 @@
     "migrate-dev": "docker exec app npx prisma migrate dev --name init",
     "migrate-deploy": "npx prisma migrate deploy",
     "seed-local": "./seed_local.sh",
+    "seed-prod": "./seed_prod.sh",
     "compose": "docker compose up -d --build",
     "decompose": "docker compose down",
     "build-from-scratch": "npm run compose && npm run migrate-dev && npm run seed",
