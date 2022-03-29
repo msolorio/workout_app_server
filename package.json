@@ -4,8 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "migrate-dev": "docker exec app npx prisma migrate dev --name init",
+    "migrate-deploy": "npx prisma migrate deploy",
+    "seed": "docker exec app sh ./curl_seed_route.sh",
+    "compose": "docker compose up -d --build",
+    "decompose": "docker compose down",
+    "build-from-scratch": "npm run compose && npm run migrate-dev && npm run seed",
+    "post-deploy": "npm run migrate-deploy && npm run seed"
   },
   "keywords": [],
   "author": "",
@@ -17,9 +24,10 @@
     "dotenv": "^16.0.0",
     "graphql": "^15.6.1",
     "graphql-date": "^1.0.3",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "prisma": "^3.3.0"
   },
   "devDependencies": {
-    "prisma": "^3.3.0"
+    "nodemon": "^2.0.15"
   }
 }

@@ -5,8 +5,9 @@ const { AuthenticationError } = require('apollo-server')
 const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
 const verifyAuth = require('./utils/verifyAuth')
+const PORT = process.env.PORT || 4000
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 const server = new ApolloServer({
   typeDefs,
@@ -23,7 +24,7 @@ const server = new ApolloServer({
 });
 
 (async () => {
-  const { url } = await server.listen();
+  const { url } = await server.listen(PORT);
 
   console.log(`Your server is running at ${url}`);
 })();
