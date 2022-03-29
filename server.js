@@ -12,6 +12,8 @@ const prisma = new PrismaClient()
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  introspection: true,
+  playground: true,
   context: async ({ req }) => {
     const userId = await verifyAuth(req.body.variables?.token)
 
