@@ -56,37 +56,48 @@ async function seed(parent, args, context) {
       exercisesResult.push(response)
     }
 
+    // Create sessions
+    const sessions = []
 
-    // Create a session
-    const createdSession = await context.prisma.session.create({
-      data: {
-        workoutId: Number(workouts[2].id),
-        completed: false,
-        userId: Number(firstUser.id)
-      }
-    })
+    for (let i = 0; i < seedData.sessions.length; i++) {
+      const session = seedData.sessions[i]
 
-    // Create exercise instances
-    const exInstancesData = exercisesResult
-      .filter((ex) => ex.workoutId === createdSession.workoutId)
-      .map((ex) => {
-        return {
-          exerciseId: ex.id,
-          sessionId: createdSession.id,
-          setsCompleted: 0,
-          repsCompleted: 0
+      const createdSession = await context.prisma.session.create({
+        data: {
+          workoutId: Number(workouts[session.workoutIndex].id),
+          completed: session.completed,
+          userId: Number(firstUser.id)
         }
       })
 
-    for (let i = 0; i < exInstancesData.length; i++) {
-      await context.prisma.exerciseInstance.create({
-        data: exInstancesData[i]
-      })
+      sessions.push(createdSession)
+    }
+
+    // Create exercise instances
+    for (let i = 0; i < sessions.length; i++) {
+      const session = sessions[i]
+
+      const exInstancesData = exercisesResult
+        .filter((ex) => ex.workoutId === session.workoutId)
+        .map((ex) => {
+          return {
+            exerciseId: ex.id,
+            sessionId: session.id,
+            setsCompleted: 0,
+            repsCompleted: 0
+          }
+        })
+  
+      for (let i = 0; i < exInstancesData.length; i++) {
+        await context.prisma.exerciseInstance.create({
+          data: exInstancesData[i]
+        })
+      }
     }
 
     return {
       workouts: workouts,
-      sessions: [createdSession],
+      sessions: sessions,
       users: [firstUser]
     }
   } catch (err) {

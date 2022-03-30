@@ -81,6 +81,20 @@ const seedData = {
       unit: 'lbs',
       workoutIndex: 2
     }
+  ],
+  sessions: [
+    {
+      workoutIndex: 0,
+      completed: true
+    },
+    {
+      workoutIndex: 1,
+      completed: true
+    },
+    {
+      workoutIndex: 2,
+      completed: false
+    }
   ]
 }
 
