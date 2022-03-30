@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs')
+const seedData = require('./seedData')
 
 async function seed(parent, args, context) {
   try {
@@ -15,107 +16,41 @@ async function seed(parent, args, context) {
 
     const firstUser = await context.prisma.user.create({
       data: {
-        username: 'testuser',
+        username: seedData.firstUser.username,
         password: hashedPassword
       }
     })
 
     // Create workouts
-    const firstWorkout = await context.prisma.workout.create({
-      data: {
-        name: 'Tourmaline Surf Sesh',
-        description: 'Great beginner spot - easy to catch waves',
-        location: 'Tourmaline Surf Park',
-        userId: Number(firstUser.id)
-      }
-    })
-    
-    const secondWorkout = await context.prisma.workout.create({
-      data: {
-        name: 'Marsh Workout',
-        description: 'Marsh by my house',
-        length: 120,
-        location: 'Famosa Slough',
-        userId: Number(firstUser.id)
-      }
-    })
+    const workouts = []
 
-    const thirdWorkout = await context.prisma.workout.create({
-      data: {
-        name: 'Gym Workout',
-        description: 'pumping iron at the place down the street',
-        length: 120,
-        location: 'Point Loma Gym',
-        userId: Number(firstUser.id)
-      }
-    })
+    for (let i = 0; i < seedData.workouts.length; i++) {
+      
+      workoutData = seedData.workouts[i]
+      workoutData.userId = Number(firstUser.id)
 
-    // Create exercises
-    const exercisesData = [
-      {
-        name: 'Leg stretches',
-        reps: 10,
-        workoutId: Number(firstWorkout.id)
-      },
-      {
-        name: 'Stand ups',
-        reps: 10,
-        workoutId: Number(firstWorkout.id)
-      },
-      {
-        name: 'Paddle Sprints',
-        reps: 2,
-        workoutId: Number(firstWorkout.id)
-      },
-      {
-        name: 'Push ups',
-        reps: 20,
-        sets: 3,
-        workoutId: Number(secondWorkout.id)
-      },
-      {
-        name: 'Upsidedown Shoulder Press',
-        reps: 15,
-        sets: 3,
-        workoutId: Number(secondWorkout.id)
-      },
-      {
-        name: 'Squats',
-        reps: 10,
-        sets: 3,
-        workoutId: Number(secondWorkout.id)
-      },
-      {
-        name: 'Bicep Curl',
-        reps: 10,
-        sets: 3,
-        weight: 15,
-        unit: 'lbs',
-        workoutId: Number(thirdWorkout.id)
-      },
-      {
-        name: 'Chest Press',
-        reps: 8,
-        sets: 3,
-        weight: 40,
-        unit: 'lbs',
-        workoutId: Number(thirdWorkout.id)
-      },
-      {
-        name: 'Shoulder Press',
-        reps: 8,
-        sets: 3,
-        weight: 30,
-        unit: 'lbs',
-        workoutId: Number(thirdWorkout.id)
-      },
-    ]
+      const workout = await context.prisma.workout.create({
+        data: workoutData
+      })
+
+      workouts.push(workout)
+    }
 
     let exercisesResult = []
 
-    for (let i = 0; i < exercisesData.length; i++) {
+    for (let i = 0; i < seedData.exercises.length; i++) {
+      const exercise = seedData.exercises[i]
+      const exerciseData = {
+        name: exercise.name,
+        reps: exercise.reps,
+        sets: exercise.sets,
+        weight: exercise.weight,
+        unit: exercise.unit,
+        workoutId: Number(workouts[exercise.workoutIndex].id)
+      }
+
       const response = await context.prisma.exercise.create({
-        data: exercisesData[i]
+        data: exerciseData
       })
   
       exercisesResult.push(response)
@@ -125,7 +60,7 @@ async function seed(parent, args, context) {
     // Create a session
     const createdSession = await context.prisma.session.create({
       data: {
-        workoutId: Number(thirdWorkout.id),
+        workoutId: Number(workouts[2].id),
         completed: false,
         userId: Number(firstUser.id)
       }
@@ -150,7 +85,7 @@ async function seed(parent, args, context) {
     }
 
     return {
-      workouts: [firstWorkout, secondWorkout, thirdWorkout],
+      workouts: workouts,
       sessions: [createdSession],
       users: [firstUser]
     }

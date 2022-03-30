@@ -12,7 +12,7 @@
     "seed-prod": "./seed_prod.sh",
     "compose": "docker compose up -d --build",
     "decompose": "docker compose down",
-    "build-from-scratch": "npm run compose && npm run migrate-dev && npm run seed",
+    "build-from-scratch": "npm run compose && npm run migrate-dev && npm run seed-local",
     "init-deploy": "npm run migrate-prod && npm run seed-prod"
   },
   "keywords": [],
