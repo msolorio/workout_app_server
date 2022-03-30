@@ -36,6 +36,7 @@ const seedData = {
       reps: 5,
       sets: 3,
       weight: 40,
+      unit: 'lbs',
       workoutIndex: 0
     },
     {
@@ -43,6 +44,7 @@ const seedData = {
       reps: 6,
       sets: 3,
       weight: 40,
+      unit: 'lbs',
       workoutIndex: 0
     },
     {
@@ -50,6 +52,7 @@ const seedData = {
       reps: 6,
       sets: 3,
       weight: 30,
+      unit: 'lbs',
       workoutIndex: 0
     },
     {
@@ -57,6 +60,7 @@ const seedData = {
       reps: 5,
       sets: 3,
       weight: 40,
+      unit: 'lbs',
       workoutIndex: 1
     },
     {
@@ -64,6 +68,7 @@ const seedData = {
       reps: 10,
       sets: 3,
       weight: 30,
+      unit: 'lbs',
       workoutIndex: 1
     },
     {
@@ -95,6 +100,28 @@ const seedData = {
       weight: 14,
       unit: 'lbs',
       workoutIndex: 2
+    },
+    {
+      name: 'Incline bench press',
+      reps: 8,
+      sets: 3,
+      weight: 80,
+      unit: 'lbs',
+      workoutIndex: 3
+    },
+    {
+      name: 'Pushups',
+      reps: 25,
+      sets: 3,
+      workoutIndex: 3
+    },
+    {
+      name: 'Cable Crossover',
+      reps: 8,
+      sets: 3,
+      weight: 25,
+      unit: 'lbs',
+      workoutIndex: 3
     }
   ],
   sessions: [
