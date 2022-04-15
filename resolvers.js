@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const verifyAuth = require('./utils/verifyAuth')
-const makeAuthedQuery = require('./utils/makeAuthedQuery')
+const tryQuery = require('./utils/tryQuery')
 
 const seed = require('./seed');
 
@@ -15,7 +15,7 @@ const resolvers = {
 
 
     workouts: async (parent, args, context) => {
-      return makeAuthedQuery(context.userId, () => {
+      return tryQuery(() => {
         return context.prisma.workout.findMany({
           where: { userId: context.userId }
         })
@@ -24,7 +24,7 @@ const resolvers = {
 
     
     workout: (parent, args, context) => {
-      return makeAuthedQuery(context.userId, () => {
+      return tryQuery(() => {
         return context.prisma.workout.findFirst({
           where: {
             userId: context.userId,
@@ -36,7 +36,7 @@ const resolvers = {
 
 
     session: (parent, args, context) => {
-      return makeAuthedQuery(context.userId, () => {
+      return tryQuery(() => {
         return context.prisma.session.findFirst({
           where: {
             userId: context.userId,
@@ -48,7 +48,7 @@ const resolvers = {
 
 
     sessions: (parent, args, context) => {
-      return makeAuthedQuery(context.userId, () => {
+      return tryQuery(() => {
         return context.prisma.session.findMany({
           where: { userId: context.userId }
         })
@@ -62,36 +62,37 @@ const resolvers = {
 
 
     signup: async (parent, args, context) => {
-      console.log('called signup resolver')
-      
-
-      const hashedPassword = await bcrypt.hash(args.password, 10)
-
-      const user = await context.prisma.user.create({
-        data: { ...args, password: hashedPassword }
+      return tryQuery(async () => {
+        const hashedPassword = await bcrypt.hash(args.password, 10)
+  
+        const user = await context.prisma.user.create({
+          data: { ...args, password: hashedPassword }
+        })
+  
+        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET)
+  
+        return { token, user }
       })
-
-      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET)
-
-      return { token, user }
     },
 
 
     login: async (parent, args, context) => {
-      const user = await context.prisma.user.findUnique({ where: { username: args.username } })
-      if (!user) return { error: 'Invalid credentials' }
+      return tryQuery(async () => {
+        const user = await context.prisma.user.findUnique({ where: { username: args.username } })
+        if (!user) return { error: 'Invalid credentials' }
 
-      const passwordIsValid = await bcrypt.compare(args.password, user.password)
-      if (!passwordIsValid) return { error: 'Invalid credentials' }
+        const passwordIsValid = await bcrypt.compare(args.password, user.password)
+        if (!passwordIsValid) return { error: 'Invalid credentials' }
 
-      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET)
+        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET)
 
-      return { token, user }
+        return { token, user }
+      })
     },
 
 
     createWorkout: (parent, args, context) => {
-      return makeAuthedQuery(context.userId, async () => {
+      return tryQuery(async () => {
         const newWorkout = await context.prisma.workout.create({
           data: {
             name: args.name,
@@ -117,7 +118,7 @@ const resolvers = {
 
     
     updateWorkout: async (parent, args, context) => {
-      return makeAuthedQuery(context.userId, async () => {
+      return tryQuery(async () => {
         const originalWorkout = await context.prisma.workout.findFirst({
           where: {
             id: Number(args.id),
@@ -192,7 +193,7 @@ const resolvers = {
     
     
     deleteWorkout: (parent, args, context) => {
-      return makeAuthedQuery(context.userId, () => {
+      return tryQuery(() => {
         return context.prisma.workout.deleteMany({
           where: {
             userId: context.userId,
@@ -204,7 +205,7 @@ const resolvers = {
 
 
     addExerciseToWorkout: (parent, args, context) => {
-      return makeAuthedQuery(context.userId, async () => {
+      return tryQuery(async () => {
         // Ensure user can only add exercises to their own workouts
         const assocWorkout = await context.prisma.workout.findFirst({
           where: {
@@ -232,7 +233,7 @@ const resolvers = {
 
     
     deleteExercise: (parent, args, context) => {
-      return makeAuthedQuery(context.userId, async () => {
+      return tryQuery(async () => {
         // Ensure user can only delete their own exercises
         const exercise = await context.prisma.exercise.findUnique({
           where: { id: Number(args.id) }
@@ -255,7 +256,7 @@ const resolvers = {
 
 
     createSession: async (parent, args, context) => {
-      return makeAuthedQuery(context.userId, async () => {
+      return tryQuery(async () => {
         const newSession = await context.prisma.session.create({
           data: {
             userId: context.userId,
@@ -289,7 +290,7 @@ const resolvers = {
 
 
     completeSession: (parent, args, context) => {
-      return makeAuthedQuery(context.userId, () => {
+      return tryQuery(() => {
         return context.prisma.session.updateMany({
           where: {
             userId: context.userId,
@@ -303,7 +304,7 @@ const resolvers = {
 
 
     updateSetForExInstance: (parent, args, context) => {
-      return makeAuthedQuery(context.userId, async () => {
+      return tryQuery(async () => {
         // Ensure user can only delete their own exercises
         const exInstance = await context.prisma.exerciseInstance.findUnique({
           where: { id: Number(args.id) }
@@ -329,41 +330,57 @@ const resolvers = {
 
   Workout: {
     exercises: (parent, args, context) => {
-      return context.prisma.workout.findUnique({ where: { id: parent.id } }).exercises();
+      return tryQuery(() => {
+        return context.prisma.workout.findUnique({ where: { id: parent.id } }).exercises();
+      })
     },
 
     sessions: (parent, args, context) => {
-      return context.prisma.workout.findUnique({ where: { id: parent.id }}).sessions()
+      return tryQuery(() => {
+        return context.prisma.workout.findUnique({ where: { id: parent.id }}).sessions()
+      })
     },
 
     user: (parent, args, context) => {
-      return context.prisma.workout.findUnique({ where: { id: parent.id } }).user()
+      return tryQuery(() => {
+        return context.prisma.workout.findUnique({ where: { id: parent.id } }).user()
+      })
     }
   },
 
 
   Exercise: {
     workout: (parent, args, context) => {
-      return context.prisma.exercise.findUnique({ where: { id: parent.id } }).workout();
+      return tryQuery(() => {
+        return context.prisma.exercise.findUnique({ where: { id: parent.id } }).workout()
+      })
     },
     
     exerciseInstances: (parent, args, context) => {
-      return context.prisma.exercise.findUnique({ where: { id: parent.id } }).exerciseInstances();
+      return tryQuery(() => {
+        return context.prisma.exercise.findUnique({ where: { id: parent.id } }).exerciseInstances()
+      })
     }
   },
 
 
   Session: {
     workout: (parent, args, context) => {
-      return context.prisma.session.findUnique({ where: { id: parent.id } }).workout()
+      return tryQuery(() => {
+        return context.prisma.session.findUnique({ where: { id: parent.id } }).workout()
+      })
     },
 
     exerciseInstances: (parent, args, context) => {
-      return context.prisma.session.findUnique({ where: { id: parent.id } }).exerciseInstances()
+      return tryQuery(() => {
+        return context.prisma.session.findUnique({ where: { id: parent.id } }).exerciseInstances()
+      })
     },
 
     user: (parent, args, context) => {
-      return context.prisma.session.findUnique({ where: { id: parent.id } }).user()
+      return tryQuery(() => {
+        return context.prisma.session.findUnique({ where: { id: parent.id } }).user()
+      })
     },
 
     date: (parent, args, context) => {
@@ -374,11 +391,15 @@ const resolvers = {
 
   ExerciseInstance: {
     exercise: (parent, args, context) => {
-      return context.prisma.exerciseInstance.findUnique({ where: { id: parent.id }}).exercise()
+      return tryQuery(() => {
+        return context.prisma.exerciseInstance.findUnique({ where: { id: parent.id }}).exercise()
+      })
     },
 
     session: (parent, args, context) => {
-      return context.prisma.exerciseInstance.findUnique({ where: { id: parent.id } }).session()
+      return tryQuery(() => {
+        return context.prisma.exerciseInstance.findUnique({ where: { id: parent.id } }).session()
+      })
     }
   }
 }
