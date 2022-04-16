@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs')
 const seedData = require('./seedData')
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient()
 
 async function seed(parent, args, context) {
   try {
@@ -103,6 +105,10 @@ async function seed(parent, args, context) {
   } catch (err) {
     console.log('Error seeding DB ==>', err);
   }
+}
+
+if (require.main === module) {
+  seed(null, null, { prisma })
 }
 
 module.exports = seed;

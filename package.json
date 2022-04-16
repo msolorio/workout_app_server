@@ -6,13 +6,11 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "migrate-dev": "docker exec app npx prisma migrate dev --name init",
+    "migrate-dev": "npx prisma migrate dev",
     "migrate-prod": "npx prisma migrate deploy",
-    "seed-local": "./seed_local.sh",
-    "seed-prod": "./seed_prod.sh",
-    "compose": "docker compose up -d --build",
-    "decompose": "docker compose down",
-    "build-from-scratch": "npm run compose && npm run migrate-dev && npm run seed-local",
+    "seed-local": "node ./scripts/seed.js",
+    "seed-prod": "node ./scripts/seed.js",
+    "init-dev": "npm run migrate-dev && npm run seed-local && npm run dev",
     "init-deploy": "npm run migrate-prod && npm run seed-prod"
   },
   "keywords": [],

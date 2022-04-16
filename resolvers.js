@@ -1,9 +1,8 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const verifyAuth = require('./utils/verifyAuth')
 const tryQuery = require('./utils/tryQuery')
 
-const seed = require('./seed');
+const seed = require('./scripts/seed');
 
 const { AuthenticationError } = require('apollo-server')
 
