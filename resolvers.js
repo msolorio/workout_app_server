@@ -6,7 +6,7 @@ const seed = require('./scripts/seed');
 
 const { AuthenticationError } = require('apollo-server')
 
-
+const { Workout } = require('./model')
 
 const resolvers = {
   Query: {
@@ -90,31 +90,11 @@ const resolvers = {
     },
 
 
-    createWorkout: (parent, args, context) => {
-      return tryQuery(async () => {
-        const newWorkout = await context.prisma.workout.create({
-          data: {
-            name: args.name,
-            description: args.description,
-            length: args.length,
-            location: args.location,
-            userId: Number(context.userId)
-          }
-        });
-  
-        const formattedExercises = args.exercises?.map(ex => {
-          ex.workoutId = Number(newWorkout.id);
-          return ex;
-        }) || [];
-  
-        await context.prisma.exercise.createMany({
-          data: formattedExercises
-        });
-  
-        return newWorkout;
-      })
-    },
+    createWorkout: async (parent, args, context) => {
 
+      // Pass in only the data the function needs
+      return await Workout.createWorkout(parent, args, context)
+    },
     
     updateWorkout: async (parent, args, context) => {
       return tryQuery(async () => {
