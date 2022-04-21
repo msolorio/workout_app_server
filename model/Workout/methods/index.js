@@ -1,3 +1,4 @@
 module.exports = {
-  createWorkout: require('./createWorkout')
+  createWorkout: require('./createWorkout'),
+  updateWorkout: require('./updateWorkout')
 }

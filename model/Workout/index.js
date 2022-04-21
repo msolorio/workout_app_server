@@ -12,6 +12,7 @@ class Workout {
   // }
 
   static createWorkout = methods.createWorkout
+  static updateWorkout = methods.updateWorkout
 }
 
 module.exports = Workout

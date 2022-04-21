@@ -1,3 +1,5 @@
+const { ApolloError } = require('apollo-server')
+
 // makeHandledQuery - Creates a function that when called will try the
 // query or return an error
 function makeHandledQuery(query) {
