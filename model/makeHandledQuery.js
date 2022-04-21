@@ -1,4 +1,6 @@
-function handledQuery(query) {
+// makeHandledQuery - Creates a function that when called will try the
+// query or return an error
+function makeHandledQuery(query) {
   return async function (...args) {
     try {
       return await query(...args)
@@ -9,4 +11,4 @@ function handledQuery(query) {
   }
 }
 
-module.exports = handledQuery
+module.exports = makeHandledQuery

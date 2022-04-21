@@ -20,7 +20,7 @@ const server = new ApolloServer({
     return {
       ...req,
       prisma,
-      userId: userId
+      userId
     }
   }
 });
