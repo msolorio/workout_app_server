@@ -1,15 +1,19 @@
-const tryQuery = require('../utils/tryQuery')
+const {
+  Exercise,
+  Session
+} = require('../model')
 
 module.exports = {
-  exercise: (parent, args, context) => {
-    return tryQuery(() => {
-      return context.prisma.exerciseInstance.findUnique({ where: { id: parent.id }}).exercise()
-    })
+  exercise: async (parent) => {
+    const { exerciseId } = parent
+
+    return await Exercise.getById(exerciseId)
   },
 
-  session: (parent, args, context) => {
-    return tryQuery(() => {
-      return context.prisma.exerciseInstance.findUnique({ where: { id: parent.id } }).session()
-    })
+  
+  session: async (parent) => {
+    const { sessionId } = parent
+    
+    return await Session.getById(sessionId)
   }
 }

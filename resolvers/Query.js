@@ -1,47 +1,38 @@
-const tryQuery = require('../utils/tryQuery')
+const {
+  Workout,
+  Session
+} = require('../model')
 
 module.exports = {
   info: () => 'This is the info',
 
 
   workouts: async (parent, args, context) => {
-    return tryQuery(() => {
-      return context.prisma.workout.findMany({
-        where: { userId: context.userId }
-      })
-    })
-  },
+    const { userId } = context
 
+    return await Workout.getMyWorkouts(userId)
+  },
   
-  workout: (parent, args, context) => {
-    return tryQuery(() => {
-      return context.prisma.workout.findFirst({
-        where: {
-          userId: context.userId,
-          id: Number(args.id)
-        }
-      })
-    })
+  
+  workout: async (parent, args, context) => {
+    const { userId } = context
+    const workoutId = args.id
+
+    return await Workout.getMyWorkout(userId, workoutId)
   },
 
 
-  session: (parent, args, context) => {
-    return tryQuery(() => {
-      return context.prisma.session.findFirst({
-        where: {
-          userId: context.userId,
-          id: Number(args.id)
-        }
-      })
-    })
+  session: async (parent, args, context) => {
+    const { userId } = context
+    const sessionId = args.id
+
+    return await Session.getMySession(userId, sessionId)
   },
 
 
-  sessions: (parent, args, context) => {
-    return tryQuery(() => {
-      return context.prisma.session.findMany({
-        where: { userId: context.userId }
-      })
-    })
+  sessions: async (parent, args, context) => {
+    const { userId } = context
+    
+    return await Session.getMySessions(userId)
   }
 }

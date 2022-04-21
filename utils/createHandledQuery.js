@@ -1,8 +1,8 @@
 const { ApolloError } = require('apollo-server')
 
-// makeHandledQuery - Creates a function that when called will try the
+// createHandledQuery - Creates a function that when called will try the
 // query or return an error
-function makeHandledQuery(query) {
+function createHandledQuery(query) {
   return async function (...args) {
     try {
       return await query(...args)
@@ -13,4 +13,4 @@ function makeHandledQuery(query) {
   }
 }
 
-module.exports = makeHandledQuery
+module.exports = createHandledQuery

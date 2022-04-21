@@ -1,5 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
-const makeHandledQuery = require('../../makeHandledQuery')
+const createHandledQuery = require('../../../utils/createHandledQuery')
 const prisma = new PrismaClient()
 const { AuthenticationError } = require('apollo-server')
 
@@ -13,6 +13,8 @@ async function query({
   userId
 }) {
 
+  // Can we remove this initial query
+  // Can we pass userId to update method
   const originalWorkout = await prisma.workout.findFirst({
     where: {
       id: Number(id),
@@ -81,6 +83,6 @@ async function query({
   return updatedWorkout
 }
 
-const updateWorkout = makeHandledQuery(query)
+const updateWorkout = createHandledQuery(query)
 
 module.exports = updateWorkout

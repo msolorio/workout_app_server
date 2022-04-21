@@ -1,5 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
-const makeHandledQuery = require('../../makeHandledQuery')
+const createHandledQuery = require('../../../utils/createHandledQuery')
 const prisma = new PrismaClient()
 
 async function query({
@@ -36,6 +36,6 @@ async function query({
 }
 
 
-const createWorkout = makeHandledQuery(query)
+const createWorkout = createHandledQuery(query)
 
 module.exports = createWorkout

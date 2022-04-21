@@ -1,18 +1,13 @@
 const methods = require('./methods')
 
 class Workout {
-  // constructor(args) {
-  //   name = args.name
-  //   description = args.description
-  //   length = args.length
-  //   location = args.location
-  //   exercises = args.exercises
-  //   sessions = args.sessions
-  //   user = args.user
-  // }
-
   static createWorkout = methods.createWorkout
   static updateWorkout = methods.updateWorkout
+  static getMyWorkouts = methods.getMyWorkouts
+  static getMyWorkout = methods.getMyWorkout
+  static deleteWorkout = methods.deleteWorkout
+  
+  static getById = methods.getById
 }
 
 module.exports = Workout

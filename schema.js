@@ -40,7 +40,7 @@ const typeDefs = gql`
       id: ID!
     ): CountResponse
 
-    addExerciseToWorkout(
+    createExercise(
       token: String!
       name: String!
       reps: Int
