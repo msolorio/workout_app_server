@@ -1,13 +1,13 @@
 require('dotenv').config()
 const { ApolloServer } = require('apollo-server');
-const { PrismaClient } = require('@prisma/client');
-const { AuthenticationError } = require('apollo-server')
+// const prisma = require('../../../prisma')
+// const { AuthenticationError } = require('apollo-server')
 const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
 const verifyAuth = require('./utils/verifyAuth')
 const PORT = process.env.PORT || 4000
 
-const prisma = new PrismaClient()
+
 
 const server = new ApolloServer({
   typeDefs,
@@ -19,7 +19,6 @@ const server = new ApolloServer({
 
     return {
       ...req,
-      prisma,
       userId
     }
   }

@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs')
 const seedData = require('./seedData')
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient()
+const prisma = require('../prisma')
+
 
 async function seed(parent, args, context) {
   try {

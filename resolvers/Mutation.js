@@ -14,7 +14,7 @@ const {
 module.exports = {
   seed: seed,
 
-  // User Interactions ///////////////////////////////////////////////////
+  // User Mutations ///////////////////////////////////////////////////
   signup: async (parent, args) => {
     const { username, password } = args
 
@@ -30,7 +30,7 @@ module.exports = {
   
   
 
-  // Workout Interactions ////////////////////////////////////////////////
+  // Workout Mutations ////////////////////////////////////////////////
   createWorkout: async (parent, args, context) => {
     const modelArgs = {
       ...args,
@@ -60,7 +60,7 @@ module.exports = {
 
 
 
-  // Exercise Interactions ///////////////////////////////////////////////
+  // Exercise Mutations ///////////////////////////////////////////////
   createExercise: async (parent, args, context) => {
     const modelArgs = {
       ...args,
@@ -80,7 +80,7 @@ module.exports = {
 
 
 
-  // Session Interactions ////////////////////////////////////////////////
+  // Session Mutations ////////////////////////////////////////////////
   createSession: async (parent, args, context) => {
     const { userId } = context
     const { workoutId } = args
@@ -98,7 +98,7 @@ module.exports = {
   
   
 
-  // Exercise Instance Interactions //////////////////////////////////////
+  // Exercise Instance Mutations //////////////////////////////////////
   updateSetForExInstance: async (parent, args, context) => {
     const modelArgs = {
       userId: context.userId,

@@ -1,8 +1,8 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../../../prisma')
 const createHandledQuery = require('../../../utils/createHandledQuery')
-const prisma = new PrismaClient()
+
 
 async function query(username, password) {
   const foundUser = await prisma.user.findUnique({ where: { username } })

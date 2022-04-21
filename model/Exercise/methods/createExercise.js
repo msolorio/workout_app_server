@@ -1,6 +1,6 @@
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../../../prisma')
 const createHandledQuery = require('../../../utils/createHandledQuery')
-const prisma = new PrismaClient()
+
 
 async function query({
   userId,
