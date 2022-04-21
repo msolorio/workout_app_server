@@ -91,11 +91,12 @@ const resolvers = {
 
 
     createWorkout: async (parent, args, context) => {
+      const modelArgs = { ...args, userId: context.userId }
 
-      // Pass in only the data the function needs
-      return await Workout.createWorkout(parent, args, context)
+      return await Workout.createWorkout(modelArgs)
     },
-    
+
+
     updateWorkout: async (parent, args, context) => {
       return tryQuery(async () => {
         const originalWorkout = await context.prisma.workout.findFirst({

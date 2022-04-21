@@ -1,27 +1,42 @@
+const { PrismaClient } = require('@prisma/client');
 const handledQuery = require('../../handledQuery')
+const prisma = new PrismaClient()
 
 // Pass in only the data the function needs
-const createWorkout = handledQuery(async (parent, args, context) => {
-  const newWorkout = await context.prisma.workout.create({
-    data: {
-      name: args.name,
-      description: args.description,
-      length: args.length,
-      location: args.location,
-      userId: Number(context.userId)
-    }
-  });
+async function query({
+  name,
+  description,
+  length,
+  location,
+  exercises,
+  userId
+}) {
 
-  const formattedExercises = args.exercises?.map(ex => {
+  const newWorkout = await prisma.workout.create({
+    data: {
+      name: name,
+      description: description,
+      length: length,
+      location: location,
+      userId: Number(userId)
+    }
+  })
+
+  const formattedExercises = exercises?.map(ex => {
     ex.workoutId = Number(newWorkout.id);
     return ex;
-  }) || [];
+  })
 
-  await context.prisma.exercise.createMany({
-    data: formattedExercises
-  });
+  if (formattedExercises) {
+    await prisma.exercise.createMany({
+      data: formattedExercises
+    })
+  }
 
   return newWorkout;
-})
+}
+
+
+const createWorkout = handledQuery(query)
 
 module.exports = createWorkout
