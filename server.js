@@ -1,7 +1,5 @@
 require('dotenv').config()
 const { ApolloServer } = require('apollo-server');
-// const prisma = require('../../../prisma')
-// const { AuthenticationError } = require('apollo-server')
 const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
 const verifyAuth = require('./utils/verifyAuth')

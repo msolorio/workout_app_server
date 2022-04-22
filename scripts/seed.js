@@ -7,16 +7,16 @@ async function seed(parent, args, context) {
   try {
 
     // Clear existing records
-    await context.prisma.user.deleteMany()
-    await context.prisma.workout.deleteMany()
-    await context.prisma.exercise.deleteMany()
-    await context.prisma.session.deleteMany()
-    await context.prisma.exerciseInstance.deleteMany()
+    await prisma.user.deleteMany()
+    await prisma.workout.deleteMany()
+    await prisma.exercise.deleteMany()
+    await prisma.session.deleteMany()
+    await prisma.exerciseInstance.deleteMany()
     
     // Create users
     const hashedPassword = await bcrypt.hash('1234', 10)
 
-    const firstUser = await context.prisma.user.create({
+    const firstUser = await prisma.user.create({
       data: {
         username: seedData.firstUser.username,
         password: hashedPassword
@@ -31,7 +31,7 @@ async function seed(parent, args, context) {
       workoutData = seedData.workouts[i]
       workoutData.userId = Number(firstUser.id)
 
-      const workout = await context.prisma.workout.create({
+      const workout = await prisma.workout.create({
         data: workoutData
       })
 
@@ -51,7 +51,7 @@ async function seed(parent, args, context) {
         workoutId: Number(workouts[exercise.workoutIndex].id)
       }
 
-      const response = await context.prisma.exercise.create({
+      const response = await prisma.exercise.create({
         data: exerciseData
       })
   
@@ -64,7 +64,7 @@ async function seed(parent, args, context) {
     for (let i = 0; i < seedData.sessions.length; i++) {
       const session = seedData.sessions[i]
 
-      const createdSession = await context.prisma.session.create({
+      const createdSession = await prisma.session.create({
         data: {
           workoutId: Number(workouts[session.workoutIndex].id),
           completed: session.completed,
@@ -79,21 +79,25 @@ async function seed(parent, args, context) {
     for (let i = 0; i < sessions.length; i++) {
       const session = sessions[i]
 
+      console.log('session:', session)
+
       const exInstancesData = exercisesResult
         .filter((ex) => ex.workoutId === session.workoutId)
         .map((ex) => {
           return {
             exerciseId: ex.id,
             sessionId: session.id,
-            setsCompleted: 0,
-            repsCompleted: 0
+            setsCompleted: session.completed ? ex.sets : 0,
+            repsCompleted: session.completed ? ex.reps : 0,
           }
         })
   
       for (let i = 0; i < exInstancesData.length; i++) {
-        await context.prisma.exerciseInstance.create({
+        const exInst = await prisma.exerciseInstance.create({
           data: exInstancesData[i]
         })
+
+        console.log('exInst:', exInst)
       }
     }
 

@@ -9,11 +9,11 @@ async function query({
   reps,
   sets,
   weight,
-  unit  
+  unit
 }) {
   const numWorkoutId = Number(workoutId)
 
-  // Ensure user can only add exercises to their own workouts
+  // Ensures user can only add exercises to their own workouts
   const assocWorkout = await prisma.workout.findFirst({
     where: {
       userId,
