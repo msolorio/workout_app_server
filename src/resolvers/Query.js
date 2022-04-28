@@ -10,7 +10,9 @@ module.exports = {
   workouts: async (parent, args, context) => {
     const { userId } = context
 
-    return await Workout.getMyWorkouts(userId)
+    const workouts = await Workout.getMyWorkouts(userId)
+
+    return workouts
   },
   
   

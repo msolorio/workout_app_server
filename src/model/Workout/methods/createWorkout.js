@@ -1,7 +1,6 @@
 const prisma = require('../../../prisma')
 const createHandledQuery = require('../../../utils/createHandledQuery')
 
-
 async function query({
   name,
   description,

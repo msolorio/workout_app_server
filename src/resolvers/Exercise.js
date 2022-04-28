@@ -3,8 +3,7 @@ const {
   ExerciseInstance
 } = require('../model')
 
-
-module.exports = {
+const Exercise = {
   workout: async (parent) => {
     const { workoutId } = parent
 
@@ -13,8 +12,11 @@ module.exports = {
 
 
   exerciseInstances: async (parent) => {
+
     const exerciseId = parent.id
     
     return await ExerciseInstance.getForExercise(exerciseId)
   }
 }
+
+module.exports = Exercise

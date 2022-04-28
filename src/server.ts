@@ -5,16 +5,13 @@ const resolvers = require('./resolvers');
 const verifyAuth = require('./utils/verifyAuth')
 const PORT = process.env.PORT || 4000
 
-
-
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   introspection: true,
   playground: true,
-  context: async ({ req }) => {
+  context: async ({ req }: any) => {
     const userId = await verifyAuth(req.body.variables?.token)
-
     return {
       ...req,
       userId
