@@ -1,7 +1,8 @@
 const { ApolloError } = require('apollo-server')
 
-function createHandledQuery(query) {
-  return async function (...args) {
+function createHandledQuery(query: any) {
+  return async function (...args: any[]) {
+
     try {
       return await query(...args)
     } catch (err) {

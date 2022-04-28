@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken')
 const { AuthenticationError } = require('apollo-server')
 
-async function verifyAuth(token) {
+
+async function verifyAuth(token: string) {
   if (!token) return false
 
   try {

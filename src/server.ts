@@ -5,6 +5,8 @@ const resolvers = require('./resolvers');
 const verifyAuth = require('./utils/verifyAuth')
 const PORT = process.env.PORT || 4000
 
+
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -24,3 +26,5 @@ const server = new ApolloServer({
 
   console.log(`Your server is running at ${url}`);
 })();
+
+export {}

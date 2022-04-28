@@ -1,22 +1,25 @@
 const mdl = require('../model')
 
-// const { WorkoutType } = require('../model/types')
+interface WorkoutType {
+  id: number
+  userId: number
+}
 
 module.exports = {
-  exercises: async (parent) => {
+  exercises: async (parent: WorkoutType) => {
     const workoutId = parent.id
 
     return await mdl.Exercise.getForWorkout(workoutId)
   },
 
 
-  sessions: async (parent) => {
+  sessions: async (parent: WorkoutType) => {
     const workoutId = parent.id
 
     return await mdl.Session.getForWorkout(workoutId)
   },
 
-  user: async (parent) => {
+  user: async (parent: WorkoutType) => {
     const { userId } = parent
     
     return await mdl.User.getById(userId)
