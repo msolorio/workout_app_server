@@ -37,7 +37,9 @@ module.exports = {
       userId: context.userId
     }
 
-    return await Workout.createWorkout(modelArgs)
+    const { createdWorkout } = await Workout.createWorkout(modelArgs)
+
+    return createdWorkout
   },
 
 

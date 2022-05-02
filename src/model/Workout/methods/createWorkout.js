@@ -10,7 +10,7 @@ async function query({
   userId
 }) {
 
-  const newWorkout = await prisma.workout.create({
+  const createdWorkout = await prisma.workout.create({
     data: {
       name: name,
       description: description,
@@ -20,18 +20,18 @@ async function query({
     }
   })
 
-  const formattedExercises = exercises?.map(ex => {
-    ex.workoutId = Number(newWorkout.id);
-    return ex;
-  })
-
-  if (formattedExercises) {
+  if (exercises) {
+    const formattedExercises = exercises.map(ex => {
+      ex.workoutId = Number(createdWorkout.id);
+      return ex;
+    })
+  
     await prisma.exercise.createMany({
       data: formattedExercises
     })
   }
 
-  return newWorkout;
+  return { createdWorkout };
 }
 
 
