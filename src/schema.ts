@@ -2,10 +2,10 @@ const { gql } = require('apollo-server')
 
 const typeDefs = gql`
   type Query {
-    workouts(token: String!): [Workout!]!
-    workout(token: String!, id: ID!): Workout
-    session(token: String!, id: ID!): Session
-    sessions(token: String!): [Session!]!
+    workouts: [Workout!]!
+    workout(id: ID!): Workout
+    session(id: ID!): Session
+    sessions: [Session!]!
     info: String!
   }
 
@@ -17,7 +17,6 @@ const typeDefs = gql`
     login(username: String!, password: String!): AuthPayload
 
     createWorkout(
-      token: String!
       name: String!
       description: String
       length: Int
@@ -26,7 +25,6 @@ const typeDefs = gql`
     ): Workout!
 
     updateWorkout(
-      token: String!
       id: ID!
       name: String
       description: String
@@ -36,12 +34,10 @@ const typeDefs = gql`
     ): Workout!
 
     deleteWorkout(
-      token: String!
       id: ID!
     ): CountResponse
 
     createExercise(
-      token: String!
       name: String!
       reps: Int
       sets: Int!
@@ -51,22 +47,18 @@ const typeDefs = gql`
     ): Exercise!
 
     deleteExercise(
-      token: String!
       id: ID!
     ): CountResponse
 
     createSession(
-      token: String!
       workoutId: ID!
     ): Session!
 
     completeSession(
-      token: String!
       id: ID!
     ): CountResponse
 
     updateSetForExInstance(
-      token: String!
       id: ID!
       setsCompleted: Int!
     ): ExerciseInstance!
