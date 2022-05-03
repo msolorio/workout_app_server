@@ -18,16 +18,29 @@ module.exports = {
   signup: async (parent, args) => {
     const { username, password } = args
 
-    return await User.signup(username, password)
+    const { token, user } = await User.signup(username, password)
+
+    context.res.cookie('token', token, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24
+    })
+
+    return { token, user }
   },
 
   
-  login: async (parent, args) => {
+  login: async (parent, args, context) => {
     const { username, password } = args
 
-    return await User.login(username, password)
+    const { token, user } = await User.login(username, password)
+
+    context.res.cookie('token', token, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24
+    })
+
+    return { token, user }
   },
-  
   
 
   // Workout Mutations ////////////////////////////////////////////////
