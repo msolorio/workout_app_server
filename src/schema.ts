@@ -16,6 +16,8 @@ const typeDefs = gql`
 
     login(username: String!, password: String!): AuthPayload
 
+    logout: GeneralResponse
+
     createWorkout(
       name: String!
       description: String
@@ -79,6 +81,11 @@ const typeDefs = gql`
     token: String
     user: User
     error: String
+  }
+
+  type GeneralResponse {
+    error: String
+    success: Boolean
   }
 
   type CountResponse {

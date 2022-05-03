@@ -42,6 +42,17 @@ module.exports = {
     return { token, user }
   },
   
+  logout: async (parent, args, context) => {
+    context.res.cookie('token', '', {
+      httpOnly: true,
+      maxAge: 0
+    })
+
+    return {
+      error: '',
+      success: true
+    }
+  },
 
   // Workout Mutations ////////////////////////////////////////////////
   createWorkout: async (parent, args, context) => {
