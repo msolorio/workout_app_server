@@ -25,7 +25,7 @@ module.exports = {
       maxAge: 1000 * 60 * 60 * 24
     })
 
-    return { token, user }
+    return { user }
   },
 
   
@@ -39,7 +39,7 @@ module.exports = {
       maxAge: 1000 * 60 * 60 * 24
     })
 
-    return { token, user }
+    return { user }
   },
   
   logout: async (parent, args, context) => {

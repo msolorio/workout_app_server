@@ -32,11 +32,7 @@ const server = new ApolloServer({
   introspection: true,
   playground: true,
   context: async ({ req }) => {
-    // const userId = await verifyAuth(req.body.variables?.token)
-
-    return {
-      ...req
-    }
+    return { ...req }
   }
 });
 
