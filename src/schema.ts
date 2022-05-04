@@ -79,6 +79,7 @@ const typeDefs = gql`
 
   type AuthPayload {
     user: User
+    error: String
   }
 
   type GeneralResponse {

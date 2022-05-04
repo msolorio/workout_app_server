@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
 const { AuthenticationError } = require('apollo-server')
 const seed = require('../scripts/seed')
+const setTokenCookie = require('../utils/setTokenCookie')
 
 const {
   Workout,
@@ -15,31 +15,38 @@ module.exports = {
   seed: seed,
 
   // User Mutations ///////////////////////////////////////////////////
-  signup: async (parent, args) => {
+  signup: async (parent, args, context) => {
     const { username, password } = args
 
-    const { token, user } = await User.signup(username, password)
+    const { token, user, error } = await User.signup(username, password)
 
-    context.res.cookie('token', token, {
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24
-    })
+    if (error) {
+      return { error }
+    }
 
-    return { user }
+    if (!error) {
+      setTokenCookie(context, token)
+
+      return { user }
+    }
+
   },
 
   
   login: async (parent, args, context) => {
     const { username, password } = args
 
-    const { token, user } = await User.login(username, password)
+    const { token, user, error } = await User.login(username, password)
 
-    context.res.cookie('token', token, {
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24
-    })
+    if (error) {
+      return { error }
+    }
+    
+    if (!error) {
+      setTokenCookie(context, token)
 
-    return { user }
+      return { user }
+    }
   },
   
   logout: async (parent, args, context) => {

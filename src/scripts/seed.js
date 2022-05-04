@@ -79,8 +79,6 @@ async function seed(parent, args, context) {
     for (let i = 0; i < sessions.length; i++) {
       const session = sessions[i]
 
-      console.log('session:', session)
-
       const exInstancesData = exercisesResult
         .filter((ex) => ex.workoutId === session.workoutId)
         .map((ex) => {
@@ -96,8 +94,6 @@ async function seed(parent, args, context) {
         const exInst = await prisma.exerciseInstance.create({
           data: exInstancesData[i]
         })
-
-        console.log('exInst:', exInst)
       }
     }
 

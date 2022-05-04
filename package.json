@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node dist/server.js",
-    "dev": "ts-node-dev src/server.ts",
+    "dev": "ts-node-dev src/server.js",
     "migrate-dev": "npx prisma migrate dev --schema src/prisma/schema.prisma",
     "migrate-prod": "npx prisma migrate deploy --schema src/prisma/schema.prisma",
     "seed-local": "node src/scripts/seed.js",
