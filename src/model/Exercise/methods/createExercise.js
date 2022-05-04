@@ -34,7 +34,7 @@ async function query({
     }
   })
 
-  return newExercise
+  return { createdExercise: newExercise }
 }
 
 const createExercise = createHandledQuery(query)

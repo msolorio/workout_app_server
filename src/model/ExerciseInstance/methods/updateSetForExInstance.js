@@ -23,10 +23,12 @@ async function query({
 
   if (!assocWorkout) throw new AuthenticationError('You are not authenticated. Please log in.')
 
-  return prisma.exerciseInstance.update({
+  const exerciseInstance = await prisma.exerciseInstance.update({
     where: { id: numExInstanceId },
     data: { setsCompleted }
   })
+  
+  return { exerciseInstance }
 }
 
 const updateSetForExInstance = createHandledQuery(query)

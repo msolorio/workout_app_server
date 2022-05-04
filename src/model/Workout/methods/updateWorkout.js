@@ -82,7 +82,7 @@ async function query({
   }
 
 
-  return updatedWorkout
+  return { updatedWorkout }
 }
 
 const updateWorkout = createHandledQuery(query)

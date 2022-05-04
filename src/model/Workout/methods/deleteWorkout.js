@@ -3,11 +3,12 @@ const createHandledQuery = require('../../../utils/createHandledQuery')
 
 
 async function query(userId, workoutId) {
-  // .deleteMany allows for passing more than
-  // one arg. .delete does not.
-  return prisma.workout.deleteMany({
+  // .deleteMany allows for passing more than 1 arg
+  const countObj = await prisma.workout.deleteMany({
     where: { userId: userId, id: Number(workoutId) }
   })
+
+  return countObj
 }
 
 const deleteWorkout = createHandledQuery(query)

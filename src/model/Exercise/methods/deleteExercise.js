@@ -19,9 +19,11 @@ async function query(userId, exerciseId) {
 
   if (!assocWorkout) throw new AuthenticationError('You are not authenticated. Please log in.')
 
-  return prisma.exercise.deleteMany({
+  const countObj = prisma.exercise.deleteMany({
     where: { id: numExId }
   })
+
+  return countObj
 }
 
 const deleteExercise = createHandledQuery(query)

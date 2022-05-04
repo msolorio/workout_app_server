@@ -73,7 +73,9 @@ module.exports = {
       userId: context.userId
     }
 
-    return await Workout.updateWorkout(modelArgs)
+    const { updatedWorkout } = await Workout.updateWorkout(modelArgs)
+
+    return updatedWorkout
   },
   
   
@@ -81,7 +83,9 @@ module.exports = {
     const { userId } = context
     const workoutId = args.id
 
-    return await Workout.deleteWorkout(userId, workoutId)
+    const { count } = await Workout.deleteWorkout(userId, workoutId)
+    
+    return { count }
   },
 
 
@@ -93,7 +97,9 @@ module.exports = {
       userId: context.userId
     }
 
-    return await Exercise.createExercise(modelArgs)
+    const { createdExercise } = await Exercise.createExercise(modelArgs)
+
+    return createdExercise
   },
 
   
@@ -101,7 +107,9 @@ module.exports = {
     const { userId } = context
     const exerciseId = args.id
 
-    return await Exercise.deleteExercise(userId, exerciseId)
+    const { count } = await Exercise.deleteExercise(userId, exerciseId)
+
+    return { count }
   },
 
 
@@ -111,7 +119,9 @@ module.exports = {
     const { userId } = context
     const { workoutId } = args
 
-    return await Session.createSession(userId, workoutId)
+    const { createdSession } = await Session.createSession(userId, workoutId)
+
+    return createdSession
   },
   
 
@@ -119,7 +129,9 @@ module.exports = {
     const { userId } = context
     const sessionId = args.id
 
-    return await Session.completeSession(userId, sessionId)
+    const { count } = await Session.completeSession(userId, sessionId)
+
+    return { count }
   },
   
   
@@ -132,6 +144,8 @@ module.exports = {
       setsCompleted: args.setsCompleted
     }
 
-    return await ExerciseInstance.updateSetForExInstance(modelArgs)
+    const { exerciseInstance } = await ExerciseInstance.updateSetForExInstance(modelArgs)
+
+    return exerciseInstance
   },
 }

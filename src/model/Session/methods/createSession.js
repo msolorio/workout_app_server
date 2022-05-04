@@ -3,7 +3,7 @@ const createHandledQuery = require('../../../utils/createHandledQuery')
 
 
 async function query(userId, workoutId) {
-  const newSession = await prisma.session.create({
+  const createdSession = await prisma.session.create({
     data: {
       userId: userId,
       workoutId: Number(workoutId),
@@ -20,7 +20,7 @@ async function query(userId, workoutId) {
   const exerciseInstances = exercises.map((ex) => {
     return {
       exerciseId: ex.id,
-      sessionId: newSession.id,
+      sessionId: createdSession.id,
       setsCompleted: 0,
       repsCompleted: 0
     }
@@ -30,7 +30,7 @@ async function query(userId, workoutId) {
     data: exerciseInstances
   })
 
-  return newSession
+  return { createdSession }
 }
 
 const createSession = createHandledQuery(query)
