@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken')
-const { AuthenticationError } = require('apollo-server')
 
 async function verifyAuth(token) {
   if (!token) return false
@@ -8,7 +7,7 @@ async function verifyAuth(token) {
     const decodedToken = await jwt.verify(token, process.env.JWT_SECRET)
 
     if (!decodedToken.userId) {
-      throw new AuthenticationError('You are not authenticated. Please log in.')
+      return false
     }
 
     return decodedToken.userId

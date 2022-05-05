@@ -9,14 +9,12 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   introspection: true,
-  context: async ({ req }) => {
-    return { ...req }
-  }
+  context: async ({ req }) => ({ ...req })
 });
 
 (async () => {
   await server.start()
-
+  
   server.applyMiddleware({
     app,
     path: '/',
