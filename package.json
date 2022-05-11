@@ -4,14 +4,15 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node dist/server.js",
+    "start": "npm run build && node dist/server.js",
+    "build": "tsc -p . --skipLibCheck",
     "dev": "ts-node-dev src/server.js",
     "migrate-dev": "npx prisma migrate dev --schema prisma/schema.prisma",
     "migrate-prod": "npx prisma migrate deploy --schema prisma/schema.prisma",
     "seed-local": "node src/scripts/seed.js",
     "seed-prod": "node src/scripts/seed.js",
-    "init-dev": "npm run migrate-dev && npm run seed-local && npm run dev",
-    "init-deploy": "npm run migrate-prod && npm run seed-prod"
+    "init-dev": "npm run migrate-dev && npm run seed-local && npm run build",
+    "migrate-seed-prod": "npm run migrate-prod && npm run seed-prod"
   },
   "keywords": [],
   "author": "",
