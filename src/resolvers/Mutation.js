@@ -52,7 +52,7 @@ module.exports = {
   logout: async (parent, args, context) => {
     context.res.cookie('token', '', {
       httpOnly: true,
-      maxAge: 0
+      maxAge: 1000
     })
 
     return {

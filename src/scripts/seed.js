@@ -28,7 +28,7 @@ async function seed(parent, args, context) {
 
     for (let i = 0; i < seedData.workouts.length; i++) {
       
-      workoutData = seedData.workouts[i]
+      const workoutData = seedData.workouts[i]
       workoutData.userId = Number(firstUser.id)
 
       const workout = await prisma.workout.create({
