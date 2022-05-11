@@ -11,7 +11,7 @@
     "migrate-prod": "npx prisma migrate deploy --schema prisma/schema.prisma",
     "seed-local": "node src/scripts/seed.js",
     "seed-prod": "node src/scripts/seed.js",
-    "init-dev": "npm run migrate-dev && npm run seed-local && npm run build",
+    "init-dev": "npm run migrate-dev && npm run seed-local && npm run dev",
     "migrate-seed-prod": "npm run migrate-prod && npm run seed-prod"
   },
   "keywords": [],
