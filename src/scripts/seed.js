@@ -107,8 +107,15 @@ async function seed(parent, args, context) {
   }
 }
 
-if (require.main === module) {
+function seedDirectly() {
   seed(null, null, { prisma })
 }
 
-module.exports = seed;
+if (require.main === module) {
+  seedDirectly()
+}
+
+module.exports = {
+  seed,
+  seedDirectly
+}

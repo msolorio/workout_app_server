@@ -29,6 +29,7 @@
     "graphql": "^15.6.1",
     "graphql-date": "^1.0.3",
     "jsonwebtoken": "^8.5.1",
+    "node-cron": "^3.0.0",
     "prisma": "^3.3.0"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
 const { AuthenticationError } = require('apollo-server')
-const seed = require('../scripts/seed')
+const { seed } = require('../scripts/seed')
 const setTokenCookie = require('../utils/setTokenCookie')
 
 const {
