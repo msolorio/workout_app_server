@@ -20,7 +20,7 @@ const server = new ApolloServer({
   server.applyMiddleware({ app, path: '/', cors: false })
 
   // reset db nightly at midnight pst
-  cron.schedule('0 21 * * *', seedDirectly)
+  cron.schedule('0 7 * * *', seedDirectly)
 
   app.listen({ port: PORT }, () => {
     console.log(`Server running on PORT: ${PORT}`)
