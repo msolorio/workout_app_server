@@ -97,6 +97,8 @@ async function seed(parent, args, context) {
       }
     }
 
+    console.log('Reset DB')
+
     return {
       workouts: workouts,
       sessions: sessions,

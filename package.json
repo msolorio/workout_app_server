@@ -4,15 +4,16 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "npm run build && node dist/server.js",
-    "build": "tsc -p . --skipLibCheck",
+    "start": "node dist/server.js",
+    "build": "npx tsc -p . --skipLibCheck",
     "dev": "ts-node-dev src/server.js",
     "migrate-dev": "npx prisma migrate dev --schema prisma/schema.prisma",
     "migrate-prod": "npx prisma migrate deploy --schema prisma/schema.prisma",
     "seed-local": "node src/scripts/seed.js",
     "seed-prod": "node src/scripts/seed.js",
     "init-dev": "npm run migrate-dev && npm run seed-local && npm run dev",
-    "migrate-seed-prod": "npm run migrate-prod && npm run seed-prod"
+    "migrate-seed-prod": "npm run migrate-prod && npm run seed-prod",
+    "deploy": "npm run build && heroku container:push web && heroku container:release web"
   },
   "keywords": [],
   "author": "",
@@ -41,6 +42,6 @@
     "nodemon": "^2.0.15",
     "ts-node": "^10.7.0",
     "ts-node-dev": "^1.1.8",
-    "typescript": "^4.6.3"
+    "typescript": "^4.6.4"
   }
 }
