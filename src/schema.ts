@@ -22,7 +22,7 @@ const typeDefs = gql`
       name: String!
       description: String
       length: Int
-      location: String!
+      location: String
       exercises: [InputExercise!]
     ): Workout!
 
